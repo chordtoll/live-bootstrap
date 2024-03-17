@@ -429,7 +429,7 @@ default_src_postprocess() {
 
 src_pkg() {
     touch -t 197001010000.00 .
-    reset_timestamp
+    #reset_timestamp # tar is already patched to set all timestamps to the epoch
 
     local tar_basename="${pkg}_${revision}.tar"
     local dest_tar="/external/repo/${tar_basename}"
