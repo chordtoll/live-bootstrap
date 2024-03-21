@@ -440,7 +440,7 @@ src_pkg() {
     # So this does not need a command -v grep.
     if tar --help | grep ' \-\-sort' >/dev/null 2>&1; then
         tar -C "${DESTDIR}" --sort=name --hard-dereference \
-            --numeric-owner --owner=0 --group=0 --mode=go=rX,u+rw -cvf "${dest_tar}" .
+            --numeric-owner --owner=0 --group=0 --mode=go=rX,u+rw -cvvf "${dest_tar}" .
     else
         local olddir
         olddir=$PWD
@@ -455,10 +455,11 @@ src_pkg() {
             get_files . > ${filelist}
         fi
         tar --no-recursion ${null} --files-from "${filelist}" \
-                --numeric-owner --owner=0 --group=0 --mode=go=rX,u+rw -cvf "${dest_tar}"
+                --numeric-owner --owner=0 --group=0 --mode=go=rX,u+rw -cvvf "${dest_tar}"
         rm -f "$filelist"
         cd "$olddir"
     fi
+    tar -tvf "${dest_tar}"
     touch -t 197001010000.00 "${tar_basename}"
     bzip2 --best "${tar_basename}"
 }
