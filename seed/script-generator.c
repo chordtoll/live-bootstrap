@@ -492,6 +492,15 @@ void generate_preseed_jump(int id) {
 	fclose(out);
 }
 
+void output_archive(FILE *out, char* arg, int pass) {
+	fputs("tar --exclude=/external --exclude=/sys --exclude=/proc -c -f /external/snapshot-",out);
+	fputs(arg,out);
+	fputs("-",out);
+	fputs(int2str(pass,10,0),out);
+	fputs(".tar /\n",out);
+
+}
+
 void generate(Directive *directives) {
 	/*
 	 * We are separating the stages given in the mainfest into a bunch of
@@ -513,6 +522,7 @@ void generate(Directive *directives) {
 	Directive *past;
 	char *filename;
 	int pass_no;
+
 	for (directive = directives; directive != NULL; directive = directive->next) {
 		if (directive->type == TYPE_BUILD) {
 			/* Get what pass number this is. */
@@ -523,6 +533,9 @@ void generate(Directive *directives) {
 				}
 			}
 			output_build(out, directive, pass_no, bash_build);
+			if (bash_build) {
+				output_archive(out,directive->arg,pass_no);
+			}
 			if (strncmp(directive->arg, "bash-", 5) == 0) {
 				if (!bash_build) {
 					/*
