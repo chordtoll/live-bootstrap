@@ -244,7 +244,8 @@ build() {
     src_checksum "${pkg}" "${revision}"
 
     echo "${pkg}: cleaning up."
-    rm -rf "${SRCDIR}/${pkg}/build"
+    mv "${SRCDIR}/${pkg}/build" "${SRCDIR}/${pkg}/build-${revision}" || true
+    #rm -rf "${SRCDIR}/${pkg}/build"
     rm -rf "${DESTDIR}"
 
     echo "${pkg}: installing package."
