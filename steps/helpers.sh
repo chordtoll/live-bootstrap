@@ -128,7 +128,7 @@ uninstall() {
                 get_revision "${removing}"
                 local filename="/external/repo/${removing}_$((revision-1)).tar.bz2"
                 # Initial bzip2 built against meslibc has broken pipes
-                bzip2 -dc "${filename}" | tar -xf -
+                bzip2 -dc "${filename}" | tar -xvf -
                 # reverse to have files before directories
                 if command -v find >/dev/null 2>&1; then
                     find . | sort -r > ../filelist
@@ -317,19 +317,19 @@ extract_file() {
                     if test -e "${PREFIX}/libexec/rmt"; then
                         # Again, we want to split out into words.
                         # shellcheck disable=SC2086
-                        tar --no-same-owner -xf "${DISTFILES}/${f}" ${extract}
+                        tar --no-same-owner -xvf "${DISTFILES}/${f}" ${extract}
                     else
                         # shellcheck disable=SC2086
                         case "${f}" in
-                        *.tar.gz) tar -xzf "${DISTFILES}/${f}" ${extract} ;;
+                        *.tar.gz) tar -xzvf "${DISTFILES}/${f}" ${extract} ;;
                         *.tar.bz2)
                             # Initial bzip2 built against meslibc has broken pipes
-                            bzip2 -dc "${DISTFILES}/${f}" | tar -xf - ${extract} ;;
+                            bzip2 -dc "${DISTFILES}/${f}" | tar -xvf - ${extract} ;;
                         *.tar.xz | *.tar.lzma)
                             if test -e "${PREFIX}/bin/xz"; then
-                                tar -xf "${DISTFILES}/${f}" --use-compress-program=xz ${extract}
+                                tar -xvf "${DISTFILES}/${f}" --use-compress-program=xz ${extract}
                             else
-                                unxz --file "${DISTFILES}/${f}" | tar -xf - ${extract}
+                                unxz --file "${DISTFILES}/${f}" | tar -xvf - ${extract}
                             fi
                             ;;
                         esac
